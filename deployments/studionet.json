@@ -1,0 +1,62 @@
+{
+  "schema": "genlayer-intelligent-contract-deployment/v2",
+  "verified_at": "2026-08-25T11:04:27.232405Z",
+  "network": {
+    "name": "studionet",
+    "chain_id": 61999,
+    "rpc": "https://studio.genlayer.com/api",
+    "explorer": "https://explorer-studio.genlayer.com"
+  },
+  "contract": {
+    "address": "0xd5e2249A5d181bBc7FF7c4A251aEB0Dd63E12616",
+    "explorer_url": "https://explorer-studio.genlayer.com/address/0xd5e2249A5d181bBc7FF7c4A251aEB0Dd63E12616",
+    "source_path": "contracts/riddle_prize.py",
+    "source_sha256": "a271b1cf7eb9d908a5d3634fcc16ec27ebece231b1044c372cb2d09ecfe4cd07",
+    "runner": "py-genlayer:1jb45aa8ynh2a9c9xn3b7qqh8sm5q93hwfp7jqmwsfhh8jpz09h6",
+    "policy_schema": "riddle-prize/policy/v4",
+    "source_exact_for_deployment": true
+  },
+  "transactions": {
+    "deploy": {
+      "hash": "0x5f1178fb364c08afd0edd62142f0ef7c291e856a13ba986da5d5025b7ead8997",
+      "status": "FINALIZED",
+      "execution_result": "SUCCESS",
+      "explorer_url": "https://explorer-studio.genlayer.com/tx/0x5f1178fb364c08afd0edd62142f0ef7c291e856a13ba986da5d5025b7ead8997"
+    },
+    "intelligent_write": {
+      "hash": "0x7a076f0953e32b399a1923af0c5cee159c57771db4f2e6264645180ef3aac049",
+      "status": "FINALIZED",
+      "execution_result": "SUCCESS",
+      "explorer_url": "https://explorer-studio.genlayer.com/tx/0x7a076f0953e32b399a1923af0c5cee159c57771db4f2e6264645180ef3aac049"
+    }
+  },
+  "smoke": {
+    "persisted_state_read": true,
+    "observed_result": "CORRECT",
+    "live_nondeterministic_write": true
+  },
+  "verification": {
+    "execution_success_asserted": true,
+    "local_direct_tests_passed": true,
+    "local_five_validator_test_passed": true,
+    "abi_policy_read": true,
+    "wallet_owner_isolated": true,
+    "workspace_wallet_used": false,
+    "other_owner_wallet_reused": false
+  },
+  "wallet": {
+    "owner": "stephengerald",
+    "deployer": "0xDAFa5efFbCC77E766298a5cb23A538289b1618Ba",
+    "test_roles": [
+      "0xDAFa5efFbCC77E766298a5cb23A538289b1618Ba",
+      "0xfE684B6349E281B202AD5Dc95A1dE3Ced29C6485"
+    ],
+    "encrypted_keystores_outside_repository": true,
+    "private_material_in_repository": false
+  },
+  "tooling": {
+    "genvm_linter": "0.11.0",
+    "genlayer_test": "0.29.2",
+    "studionet_poll_interval_ms": 6000
+  }
+}

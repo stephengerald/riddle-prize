@@ -1,0 +1,63 @@
+name: contract-ci
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: contract-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install pinned dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Check dependency consistency
+        run: python -m pip check
+      - name: Lint and typecheck contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          for contract in contracts/*.py; do
+            [[ "$(basename "$contract")" == "__init__.py" ]] && continue
+            genvm-lint check "$contract"
+            genvm-lint typecheck "$contract"
+          done
+      - name: Run hardened direct tests
+        run: pytest tests/direct -q
+      - name: Run five-validator GLSim flow
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tests/run_glsim.py --validators 5 --no-browser --seed 210821 &
+          glsim_pid=$!
+          trap 'kill "$glsim_pid" 2>/dev/null || true' EXIT
+          ready=false
+          for attempt in {1..30}; do
+            if python -c "import socket; connection = socket.create_connection(('127.0.0.1', 4000), timeout=1); connection.close()"; then
+              ready=true
+              break
+            fi
+            if ! kill -0 "$glsim_pid" 2>/dev/null; then
+              wait "$glsim_pid"
+              exit 1
+            fi
+            sleep 1
+          done
+          if [[ "$ready" != true ]]; then
+            echo "GLSim did not become ready within 30 seconds" >&2
+            exit 1
+          fi
+          gltest tests/integration/test_glsim_consensus.py -q --network localnet
